@@ -57,5 +57,3 @@ fetch(`https://api.github.com/users/${getName(url)}`)
  	addUserUrl();
  })
  .catch(err => alert(err + 'Информация о пользователе не доступна'));
-
-

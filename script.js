@@ -22,7 +22,7 @@ let getNowDate = new Promise((resolve, reject) => {
 });
 
 function dataRequest(){
- let info = fetch('https://api.github.com/users/KsuBurn');
+ let info = fetch(`https://api.github.com/users/${getName(url)}`);
  let promise = new Promise((resolve, reject) => {
   setTimeout(() => {
   resolve(info);

@@ -1,5 +1,8 @@
 let body = document.body;
 let url = window.location.toString();
+let preloader = document.getElementById('preloader');
+let nowDate = new Date();
+let requestInfo, requestDate;
 
 let getName = (url) => {
  let urlSeparation = url.split('=');
@@ -12,8 +15,29 @@ let getName = (url) => {
 }
 let name = getName(url);
 
-fetch(`https://api.github.com/users/${getName(url)}`)
- .then(res => res.json())
+
+
+let getNowDate = new Promise((resolve, reject) => {
+ setTimeout(() => nowDate ? resolve(nowDate) : reject ('Время не определенно'), 2000)
+});
+
+function dataRequest(){
+ let info = fetch('https://api.github.com/users/KsuBurn');
+ let promise = new Promise((resolve, reject) => {
+  setTimeout(() => {
+  resolve(info);
+  reject('error');
+  }, 3000)
+ })
+ return promise;
+}
+
+Promise.all([dataRequest(),getNowDate])
+ .then(([request, date]) =>{
+  requestInfo = request;
+  requestDate = date;
+ })
+ .then(res=>requestInfo.json())
  .then(showUserInfo => {
 
  	let userLogin = showUserInfo.login;
@@ -51,9 +75,17 @@ fetch(`https://api.github.com/users/${getName(url)}`)
  	 body.appendChild(elementForUrl);
  	}
 
+ 	let addNowDate = () => {
+ 	 let elementForDate = document.createElement('p');
+ 	 elementForDate.innerHTML = requestDate;
+ 	 body.appendChild(elementForDate);
+ 	}
+
+ 	preloader.style.display = 'none';
  	addUserLogin();
  	addUserInfo();
  	addUserPhoto();
  	addUserUrl();
+ 	addNowDate();
  })
  .catch(err => alert(err + 'Информация о пользователе не доступна'));
